@@ -1,27 +1,29 @@
-const fs = require('fs/promises');
-const path = require('path');
-const { nanoid } = require('nanoid');
+// const fs = require('fs/promises');
+// const path = require('path');
+// const { nanoid } = require('nanoid');
 
-// import { readFile, writeFile } from 'fs/promises';
-// import { join } from 'path';
-// import { nanoid } from 'nanoid';
+import fs from 'fs/promises';
+import path from 'path';
+import { nanoid } from 'nanoid';
 
-const contactsPath = path.join(__dirname, 'db', 'contacts.json');
-console.log(contactsPath);
+import contactsData from '../db/contacts.json' assert { type: 'json' };
 
-async function listContacts() {
-  const contacts = await fs.readFile(contactsPath);
+// const contactsPath = path.join(__dirname, 'db', 'contacts.json');
+// console.log(contactsPath);
+
+export async function listContacts() {
+  const contacts = await fs.readFile(contactsData);
   return JSON.parse(contacts);
 }
 
-async function getContactById(contactId) {
+export async function getContactById(contactId) {
   const contacts = await listContacts();
   const result = contacts.find(contact => contact.id === contactId);
   console.log(result);
   return result || null;
 }
 
-async function removeContact(contactId) {
+export async function removeContact(contactId) {
   const contacts = await listContacts();
   const contactIndex = contacts.findIndex(contact => contact.id === contactId);
   if (contactIndex === -1) {
@@ -32,7 +34,7 @@ async function removeContact(contactId) {
   return result;
 }
 
-async function addContact(name, email, phone) {
+export async function addContact(name, email, phone) {
   const contacts = await listContacts();
   const newContact = {
     id: nanoid(),
@@ -45,11 +47,9 @@ async function addContact(name, email, phone) {
   return newContact;
 }
 
-module.exports = {
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-};
-
-// export { listContacts, getContactById, removeContact, addContact };
+// module.exports = {
+//   listContacts,
+//   getContactById,
+//   removeContact,
+//   addContact,
+// };
