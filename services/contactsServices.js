@@ -1,25 +1,18 @@
-// const fs = require('fs/promises');
-// const path = require('path');
-// const { nanoid } = require('nanoid');
-
 import fs from 'fs/promises';
 import path from 'path';
 import { nanoid } from 'nanoid';
 
-import contactsData from '../db/contacts.json' assert { type: 'json' };
-
-// const contactsPath = path.join(__dirname, 'db', 'contacts.json');
-// console.log(contactsPath);
+import contactsPath from '../db/contacts.json' assert { type: 'json' };
 
 export async function listContacts() {
-  const contacts = await fs.readFile(contactsData);
+  const contacts = await fs.readFile(contactsPath, 'utf-8');
   return JSON.parse(contacts);
 }
 
 export async function getContactById(contactId) {
   const contacts = await listContacts();
   const result = contacts.find(contact => contact.id === contactId);
-  console.log(result);
+
   return result || null;
 }
 
