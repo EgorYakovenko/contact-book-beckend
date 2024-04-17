@@ -2,7 +2,8 @@ import fs from 'fs/promises';
 import path from 'path';
 import { nanoid } from 'nanoid';
 
-import contactsPath from '../db/contacts.json' assert { type: 'json' };
+const contactsPath = 'D:/Projects/goit-node-rest-api/db/contacts.json';
+// const contactsPath = '../db/contacts.json';
 
 export async function listContacts() {
   const contacts = await fs.readFile(contactsPath, 'utf-8');
@@ -27,13 +28,11 @@ export async function removeContact(contactId) {
   return result;
 }
 
-export async function addContact(name, email, phone) {
+export async function addContact(data) {
   const contacts = await listContacts();
   const newContact = {
     id: nanoid(),
-    ...name,
-    ...email,
-    ...phone,
+    ...data,
   };
   contacts.push(newContact);
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
