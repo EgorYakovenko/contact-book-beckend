@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { app } from './app';
+import { app } from './app.js';
 
 const DB_HOST =
   'mongodb+srv://Egor:ZrDGxmsbkdXpuecG@cluster0.ny6nz1n.mongodb.net/Contacts_book?retryWrites=true&w=majority&appName=Cluster0';
