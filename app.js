@@ -23,10 +23,3 @@ app.use((err, req, res, next) => {
   const { status = 500, message = 'Server error' } = err;
   res.status(status).json({ message });
 });
-
-//========================================
-
-// mongoose
-//   .connect(DB_HOST)
-//   .then(() => console.log('Database connect success'))
-//   .catch(error => console.log(error.message));
