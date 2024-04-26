@@ -1,16 +1,18 @@
 import mongoose from 'mongoose';
 
-import { app } from './app';
+import { app } from './app.js';
 
-const DB_HOST =
-  'mongodb+srv://Egor:ZrDGxmsbkdXpuecG@cluster0.ny6nz1n.mongodb.net/Contacts_book?retryWrites=true&w=majority&appName=Cluster0';
+const { DB_HOST } = process.env;
 
-mongoose.set('strictQuery', true);
+// const DB_HOST =
+//   'mongodb+srv://Egor:ZrDGxmsbkdXpuecG@cluster0.ny6nz1n.mongodb.net/Contacts_book?retryWrites=true&w=majority&appName=Cluster0';
 
 mongoose
   .connect(DB_HOST)
   .then(() => {
-    app.listen(3000);
+    app.listen(3000, () => {
+      console.log('Database connection successful');
+    });
   })
   .catch(error => {
     console.log(error.message);
