@@ -6,9 +6,8 @@ import wrapper from '../helpers/wrapper.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const { SECRET_KEY } = process.env;
-console.log(SECRET_KEY);
-// const SECRET_KEY = 'sfsdfsgKSDjshgfjsdSJDGFSJHgf';
+// const { SECRET_KEY } = process.env;
+// console.log(SECRET_KEY);
 
 export const register = wrapper(async (req, res) => {
   const { email, password } = req.body;
@@ -37,11 +36,15 @@ export const login = wrapper(async (req, res) => {
   if (!passwordCompare) {
     throw HttpError(401, 'Email or password is wrong');
   }
-  const payload = {
-    id: user._id,
-  };
+  // const payload = {
+  //     id: user._id,
+  // };
 
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
+  //   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
+
+  const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
+    expiresIn: '23h',
+  });
 
   res.json({ token });
 });
