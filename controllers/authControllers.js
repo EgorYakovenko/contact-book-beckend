@@ -6,9 +6,6 @@ import wrapper from '../helpers/wrapper.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-// const { SECRET_KEY } = process.env;
-// console.log(SECRET_KEY);
-
 export const register = wrapper(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -20,8 +17,10 @@ export const register = wrapper(async (req, res) => {
 
   const newUser = await User.create({ ...req.body, password: hashPassword });
   res.status(201).json({
-    email: newUser.email,
-    password: newUser.password,
+    user: {
+      email: newUser.email,
+      subscription: newUser.subscription,
+    },
   });
 });
 
@@ -36,28 +35,32 @@ export const login = wrapper(async (req, res) => {
   if (!passwordCompare) {
     throw HttpError(401, 'Email or password is wrong');
   }
-  // const payload = {
-  //     id: user._id,
-  // };
-
-  //   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
 
   const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
     expiresIn: '23h',
   });
-  await User.findByIdAndUpdate(user._id, { token });
+  await User.findOneAndUpdate(user._id, { token });
 
-  res.json({ token });
+  res.status(200).json({
+    token,
+    user: {
+      email,
+      subscription: user.subscription,
+    },
+  });
 });
 
 export const getCurrent = wrapper(async (req, res) => {
-  const { email, name } = req.user;
+  const { email, subscription } = req.user;
 
-  res.json({ email, name });
+  res.json({ email, subscription });
 });
 
-export const logout = async (req, res) => {
+export const logout = wrapper(async (req, res) => {
   const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: '' });
-  res.json({ message: 'Logout success' });
-};
+
+  res.status(204).json({
+    message: 'No Content',
+  });
+});

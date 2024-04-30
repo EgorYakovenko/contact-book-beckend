@@ -15,8 +15,9 @@ export const getAllContacts = wrapper(async (req, res) => {
 });
 
 export const getOneContact = wrapper(async (req, res) => {
-  const { id: owner } = req.params;
-  const result = await Contact.findOne({ owner });
+  const { id: _id } = req.params;
+  const { id: owner } = req.user;
+  const result = await Contact.findOne({ _id, owner });
   if (!result) {
     throw HttpError(404);
   }
@@ -24,8 +25,9 @@ export const getOneContact = wrapper(async (req, res) => {
 });
 
 export const deleteContact = wrapper(async (req, res) => {
-  const { id } = req.params;
-  const result = await Contact.findByIdAndDelete(id);
+  const { id: _id } = req.params;
+  const { _id: owner } = req.user;
+  const result = await Contact.findOneAndDelete({ _id, owner });
   if (!result) {
     throw HttpError(404);
   }
@@ -39,8 +41,11 @@ export const createContact = wrapper(async (req, res) => {
 });
 
 export const updateContact = wrapper(async (req, res) => {
-  const { id } = req.params;
-  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+  const { id: _id } = req.params;
+  const { _id: owner } = req.user;
+  const result = await Contact.findOneAndUpdate({ _id, owner }, req.body, {
+    new: true,
+  });
   if (!result) {
     throw HttpError(404);
   }
@@ -48,8 +53,11 @@ export const updateContact = wrapper(async (req, res) => {
 });
 
 export const updateStatusContact = wrapper(async (req, res) => {
-  const { id } = req.params;
-  const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+  const { id: _id } = req.params;
+  const { _id: owner } = req.user;
+  const result = await Contact.findOneAndUpdate({ _id, owner }, req.body, {
+    new: true,
+  });
   if (!result) {
     throw HttpError(404);
   }

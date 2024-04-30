@@ -12,10 +12,10 @@ import {
 } from '../controllers/authControllers.js';
 import { login } from '../controllers/authControllers.js';
 
-authUserRouter.post('/register', validateBody(registerSchema), register);
+authUserRouter.post('/users/register', validateBody(registerSchema), register);
 
-authUserRouter.post('/login', validateBody(loginSchema), login);
+authUserRouter.post('/users/login', validateBody(loginSchema), login);
 
-authUserRouter.get('/current', authenticate, getCurrent);
+authUserRouter.get('/users/current', authenticate, getCurrent);
 
-authUserRouter.post('/logout', authenticate, logout);
+authUserRouter.post('/users/logout', authenticate, logout);
