@@ -80,7 +80,7 @@ export const updateAvatar = wrapper(async (req, res) => {
   const {_id} = req.user
 
   if (!req.file) {
-    throw HttpError(404);
+    throw HttpError(400);
   }
 
   const {path: tempUpload, originalname} = req.file;
