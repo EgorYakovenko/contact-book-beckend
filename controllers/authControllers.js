@@ -80,7 +80,7 @@ export const updateAvatar = wrapper(async (req, res) => {
   const {_id} = req.user
 
   if (!req.file) {
-    throw HttpError(400);
+    throw HttpError(400, 'Please add your avatar');
   }
 
   const {path: tempUpload, originalname} = req.file;
@@ -88,7 +88,7 @@ export const updateAvatar = wrapper(async (req, res) => {
   const resultUpload = path.join(avatarsDir, filename);
 
   const image = await Jimp.read(tempUpload);
-  image.resize(250, 250).write(tempUpload);
+  image.resize(250, 250).writeAsync(tempUpload);
   
 
   await fs.rename(tempUpload,resultUpload)
