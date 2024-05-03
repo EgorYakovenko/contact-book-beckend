@@ -78,14 +78,18 @@ export const logout = wrapper(async (req, res) => {
 
 export const updateAvatar = wrapper(async (req, res) => {
   const {_id} = req.user
+
+  if (!req.file) {
+    throw HttpError(404);
+  }
+
   const {path: tempUpload, originalname} = req.file;
   const filename = `${_id}_${originalname}`
   const resultUpload = path.join(avatarsDir, filename);
 
-  Jimp.read(tempUpload, (err, image) => {
-		if (err) throw HttpError(404, err);
-		image.resize(250, 250).write(resultUpload);
-	});
+  const image = await Jimp.read(tempUpload);
+  image.resize(250, 250).write(tempUpload);
+  
 
   await fs.rename(tempUpload,resultUpload)
   const avatarURL = path.join('avatars', filename)
@@ -93,3 +97,9 @@ export const updateAvatar = wrapper(async (req, res) => {
   res.status(200).json({ avatarURL });
 });
 
+
+
+// Jimp.read(tempUpload, (err, image) => {
+//   if (err) throw HttpError(404, err);
+//   image.resize(250, 250).write(resultUpload);
+// });
