@@ -98,8 +98,3 @@ export const updateAvatar = wrapper(async (req, res) => {
 });
 
 
-
-// Jimp.read(tempUpload, (err, image) => {
-//   if (err) throw HttpError(404, err);
-//   image.resize(250, 250).write(resultUpload);
-// });
