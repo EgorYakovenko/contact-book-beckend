@@ -3,6 +3,7 @@ import { User } from '../schemas/user.js';
 import HttpError from '../helpers/HttpError.js';
 import wrapper from '../helpers/wrapper.js';
 import sendEmail from '../helpers/sendEmail.js';
+import {sendVerificationEmail} from '../helpers/verifyEmail.js'
 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -31,14 +32,8 @@ export const register = wrapper(async (req, res) => {
   // const { BASE_URL } = process.env;
   const verificationToken = nanoid();
 
-  const verifyEmail = {
-		to: email,
-		from: 'egor.yakovenko@meta.ua',
-		subject: "Welcome to phonebook",
-		http: `<a target="_blank" href="${process.env.BASE_URL}/api/users/verify/${verificationToken}">Click to verify email</a>`,
-		text: `To confirm your registration please open the link ${process.env.BASE_URL}/api/users/verify/${verificationToken}`,
-	};
-	await sendEmail(verifyEmail);
+  await sendVerificationEmail(email,verificationToken);
+ 
 
   const newUser = await User.create({
     ...req.body,
@@ -73,15 +68,8 @@ export const resendVerifyEmail = wrapper(async(req,res)=> {
   if(user.verify) {
     throw HttpError(400, "Verification has already been passed");
   }
-  const verifyEmail = {
-		to: email,
-		from: 'egor.yakovenko@meta.ua',
-		subject: "Welcome to phonebook",
-		http: `<a target="_blank" href="${process.env.BASE_URL}/api/users/verify/${user.verificationToken}">Click to verify email</a>`,
-		text: `To confirm your registration please open the link ${process.env.BASE_URL}/api/users/verify/${user.verificationToken}`,
-	};
-  await sendEmail(verifyEmail);
-
+  await sendVerificationEmail(email, user.verificationToken);
+ 
   res.json({
 		message: "Verify email send",
 	});
